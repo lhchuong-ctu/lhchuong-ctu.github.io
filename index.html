@@ -71,7 +71,8 @@ h1 {
   letter-spacing: -.015em; margin: 0; text-wrap: balance;
 }
 h1 .deg { font-style: italic; font-weight: 400; color: var(--ink-soft); font-size: .5em; letter-spacing: 0; white-space: nowrap; }
-.role { font-size: clamp(18px, 2.2vw, 22px); color: var(--ink-soft); margin: 16px 0 0; max-width: 40ch; text-wrap: balance; }
+.role { font-size: clamp(18px, 2.2vw, 22px); color: var(--ink-soft); margin: 16px 0 0; max-width: 40ch; }
+.nw { white-space: nowrap; }
 .caption {
   font-family: var(--mono); font-size: 11.5px; color: var(--ink-soft);
   margin: 44px 0 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
@@ -228,7 +229,7 @@ footer .wrap { padding-block: 24px; font-family: var(--sans); font-size: 13px; c
     </div>
     <p class="eyebrow" data-i18n="eyebrow">Probability &amp; Stochastic Processes</p>
     <h1 data-i18n="name">Lam Hoang Chuong <span class="deg">Ph.D.</span></h1>
-    <p class="role" data-i18n="role">Principal Lecturer in Mathematics, Faculty of Mathematics, College of Natural Sciences, Can Tho University</p>
+    <p class="role" data-i18n="role"><span class="nw">Principal Lecturer in Mathematics,</span> <span class="nw">Faculty of Mathematics,</span> <span class="nw">College of Natural Sciences,</span> <span class="nw">Can Tho University</span></p>
     <p class="caption">
       <span><span data-i18n="caption">Background: sample paths of a simple random walk</span> <i>S<sub>n</sub></i> = <i>X</i><sub>1</sub> + … + <i>X<sub>n</sub></i>, <i>X<sub>k</sub></i> = ±1</span>
       <button type="button" id="resample" data-i18n="resample">Resample</button>
@@ -364,7 +365,7 @@ const T = {
   vi: {
     eyebrow: "Xác suất &amp; Quá trình ngẫu nhiên",
     name: '<span class="deg">TS.</span> Lâm Hoàng Chương',
-    role: "Giảng viên cao cấp, Khoa Toán học, Trường Khoa học Tự nhiên, Đại học Cần Thơ",
+    role: '<span class="nw">Giảng viên cao cấp,</span> <span class="nw">Khoa Toán học,</span> <span class="nw">Trường Khoa học Tự nhiên,</span> <span class="nw">Đại học Cần Thơ</span>',
     caption: "Hình nền: các quỹ đạo mẫu của bước ngẫu nhiên đơn giản",
     resample: "Vẽ lại",
     uni: "Đại học Cần Thơ",
