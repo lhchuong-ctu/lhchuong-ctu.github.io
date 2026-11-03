@@ -172,6 +172,7 @@ h2 small { font-family: var(--mono); font-weight: 400; letter-spacing: 0; text-t
   display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 16px; align-items: center;
   padding: 14px 0; border-top: 1px solid var(--rule);
 }
+.course.nocode { grid-template-columns: minmax(0, 1fr) auto; }
 .course:first-child { border-top: 0; padding-top: 4px; }
 .course .code { font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
 .course .name { font-size: 18px; line-height: 1.35; margin: 0; }
@@ -210,7 +211,7 @@ footer .wrap { padding-block: 24px; font-family: var(--sans); font-size: 13px; c
   .row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .pub { grid-template-columns: 30px minmax(0, 1fr); }
   .pub .y { grid-column: 2; padding-top: 0; }
-  .course { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .course, .course.nocode { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .course .acts { justify-content: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -333,9 +334,9 @@ footer .wrap { padding-block: 24px; font-family: var(--sans); font-size: 13px; c
    Link phải bắt đầu bằng https://
 ================================================================ */
 const COURSES = [
-  { ma: "TN001", vi: "Xác suất thống kê", en: "Probability and Statistics", hk: "HK1 2026–2027", tailieu: "", diem: "" },
-  { ma: "TN002", vi: "Quá trình ngẫu nhiên", en: "Stochastic Processes", hk: "HK1 2026–2027", tailieu: "", diem: "" },
-  { ma: "TN003", vi: "Giải tích hàm", en: "Functional Analysis", hk: "HK1 2026–2027", tailieu: "", diem: "" },
+  { ma: "", vi: "Xác suất thống kê", en: "Probability and Statistics", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
+  { ma: "", vi: "Quá trình ngẫu nhiên", en: "Stochastic Processes", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
+  { ma: "", vi: "Lý thuyết xác suất", en: "Probability Theory", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
 ];
 /* ============================================================== */
 
@@ -448,9 +449,9 @@ function renderCourses() {
     ? `<a class="btn ${cls}" href="${esc(u.trim())}" target="_blank" rel="noopener">${icon}${t(label)}</a>`
     : `<span class="btn off" title="${t("soon")}">${icon}${t(label)}</span>`;
   document.getElementById("courselist").innerHTML = COURSES.map(c => `
-    <li class="course">
-      <span class="code">${esc(c.ma || "")}</span>
-      <div><p class="name">${esc((LANG === "vi" ? c.vi : c.en) || c.vi || "")}</p><p class="term">${esc(c.hk || "")}</p></div>
+    <li class="course${c.ma ? "" : " nocode"}">
+      ${c.ma ? `<span class="code">${esc(c.ma)}</span>` : ""}
+      <div><p class="name">${esc((LANG === "vi" ? c.vi : c.en) || c.vi || "")}</p>${c.hk ? `<p class="term">${esc(c.hk)}</p>` : ""}</div>
       <div class="acts">${btn(c.tailieu, "materials", ICON_DOC, "")}${btn(c.diem, "grades", ICON_GRADE, "primary")}</div>
     </li>`).join("");
 }
