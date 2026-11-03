@@ -151,6 +151,7 @@ h2 small { font-family: var(--mono); font-weight: 400; letter-spacing: 0; text-t
   letter-spacing: .06em; text-transform: uppercase; margin: 26px 0 10px;
 }
 .group-label:first-child { margin-top: 0; }
+.empty { margin: 0; padding: 18px 0; color: var(--ink-soft); font-style: italic; }
 .pubs { list-style: none; margin: 0; padding: 0; display: grid; }
 .pub {
   display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 14px;
@@ -167,17 +168,15 @@ h2 small { font-family: var(--mono); font-weight: 400; letter-spacing: 0; text-t
 
 /* Teaching */
 .intro { margin: 0 0 18px; color: var(--ink-soft); max-width: 40em; }
-.courses { list-style: none; margin: 0; padding: 0; display: grid; }
-.course {
-  display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 16px; align-items: center;
-  padding: 14px 0; border-top: 1px solid var(--rule);
+.courses { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.course, .course.nocode {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-content: space-between;
+  padding: 16px 18px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface);
 }
-.course.nocode { grid-template-columns: minmax(0, 1fr) auto; }
-.course:first-child { border-top: 0; padding-top: 4px; }
 .course .code { font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
 .course .name { font-size: 18px; line-height: 1.35; margin: 0; }
 .course .term { font-family: var(--sans); font-size: 13.5px; color: var(--ink-soft); margin: 2px 0 0; }
-.course .acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.course .acts { display: flex; gap: 8px; flex-wrap: wrap; }
 .btn {
   font-family: var(--sans); font-size: 13.5px; font-weight: 500; text-decoration: none;
   display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
@@ -205,14 +204,15 @@ footer .wrap { padding-block: 24px; font-family: var(--sans); font-size: 13px; c
   nav ul { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .skills { grid-template-columns: minmax(0, 1fr); gap: 16px; }
 }
+@media (max-width: 640px) {
+  .courses { grid-template-columns: minmax(0, 1fr); }
+}
 @media (max-width: 520px) {
   .hero .wrap { padding-block: 20px 28px; }
   .topbar { margin-bottom: 28px; }
   .row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .pub { grid-template-columns: 30px minmax(0, 1fr); }
   .pub .y { grid-column: 2; padding-top: 0; }
-  .course, .course.nocode { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-  .course .acts { justify-content: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -306,6 +306,7 @@ footer .wrap { padding-block: 24px; font-family: var(--sans); font-size: 13px; c
         <button type="button" id="f-all" data-f="all" aria-pressed="true"><span data-i18n="f_all">All</span><span class="n"></span></button>
         <button type="button" id="f-intl" data-f="intl" aria-pressed="false"><span data-i18n="intl">International journals</span><span class="n"></span></button>
         <button type="button" id="f-natl" data-f="natl" aria-pressed="false"><span data-i18n="natl">National journals</span><span class="n"></span></button>
+        <button type="button" id="f-pre" data-f="pre" aria-pressed="false"><span data-i18n="pre">Preprints</span><span class="n"></span></button>
       </div>
       <div id="publist"></div>
     </section>
@@ -333,13 +334,29 @@ footer .wrap { padding-block: 24px; font-family: var(--sans); font-size: 13px; c
    - diem:    link xem điểm (để "" nếu chưa có)
    Link phải bắt đầu bằng https://
 ================================================================ */
+/* ======================== BẢN THẢO (PREPRINTS) ========================
+   Thêm bản thảo tại đây. Mỗi bản thảo là một dòng { ... }.
+   - a:    tác giả, viết kiểu "H. C. Lam and H. N. Le"
+   - t:    tên bài
+   - tt:   tình trạng, ví dụ "Submitted" hoặc "arXiv:2601.01234"
+   - link: link bản thảo (để "" nếu không có), bắt đầu bằng https://
+   - y:    năm
+   Ví dụ:
+   { a: "H. C. Lam and H. N. Le", t: "Tên bài báo", tt: "Submitted", link: "", y: 2026 },
+====================================================================== */
+const PREPRINTS = [
+  { a: "H. C. Lam", t: "Limit theorems for random walks with parity-dependent transitions", tt: "", link: "", y: 2026 },
+  { a: "H. C. Lam", t: "Limit theorems for bilateral birth-death processes with reciprocal transition rates", tt: "", link: "", y: 2026 },
+  { a: "H. C. Lam", t: "Asymptotic behavior for one-dimensional random walks under localized external forces", tt: "", link: "", y: 2026 },
+];
+
 const COURSES = [
   { ma: "", vi: "Xác suất thống kê", en: "Probability and Statistics", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
   { ma: "", vi: "Quá trình ngẫu nhiên", en: "Stochastic Processes", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
-  { ma: "", vi: "Xác suất nâng cao", en: "Advanced Probability", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
-  { ma: "", vi: "Các định lý giới hạn", en: "Limit theorems", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
-  { ma: "", vi: "Vi tích phân A1", en: "Calculus A1", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
   { ma: "", vi: "Lý thuyết xác suất", en: "Probability Theory", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
+  { ma: "", vi: "Xác suất nâng cao", en: "Advanced Probability", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
+  { ma: "", vi: "Các định lý giới hạn", en: "Limit Theorems", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
+  { ma: "", vi: "Vi tích phân A1", en: "Calculus A1", hk: "", tailieu: "", diem: "https://script.google.com/macros/s/AKfycbzdNQKb9KwnGpBv4nOqZA9WkAUAzODy7Ee05ES3hL4s3maEwx5SSR9MWA4uA-Eoc3jSLw/exec" },
 ];
 /* ============================================================== */
 
@@ -372,7 +389,7 @@ const T = {
     msc: "Thạc sĩ Toán ứng dụng", orleans: "Đại học Orléans, Pháp", thesis_msc: "Luận văn",
     bsc: "Cử nhân Sư phạm Toán – Tin học", ctu_vn: "Trường Đại học Cần Thơ, Việt Nam", thesis_bsc: "Luận văn",
     adv: "Người hướng dẫn", sup: "Người giám sát", sups: "Người giám sát", bao: "Trương Quốc Bảo",
-    h_publications: "Công bố khoa học", f_all: "Tất cả", intl: "Tạp chí quốc tế", natl: "Tạp chí trong nước", papers: "bài báo",
+    h_publications: "Công bố khoa học", f_all: "Tất cả", intl: "Tạp chí quốc tế", natl: "Tạp chí trong nước", pre: "Bản thảo", papers: "bài báo", drafts: "bản thảo", view: "Xem bản thảo", no_pre: "Chưa có bản thảo nào được đăng.",
     h_skills: "Kỹ năng",
     s_lang: "Ngôn ngữ", s_lang_d: "Tiếng Việt (bản ngữ); tiếng Anh (thông thạo đọc, viết và nói)",
     s_comp: "Tin học", s_acad: "Học thuật",
@@ -380,7 +397,7 @@ const T = {
     foot1: "Lâm Hoàng Chương · Đại học Cần Thơ", foot2: "Cập nhật tháng 11/2026",
     alt: "Ảnh chân dung Lâm Hoàng Chương"
   },
-  en: { materials: "Materials", grades: "Grades", soon: "Coming soon", copied: "Copied", selected: "Selected", papers: "papers", alt: "Portrait of Lam Hoang Chuong" }
+  en: { drafts: "preprints", view: "View preprint", no_pre: "No preprints listed yet.", materials: "Materials", grades: "Grades", soon: "Coming soon", copied: "Copied", selected: "Selected", papers: "papers", alt: "Portrait of Lam Hoang Chuong" }
 };
 // English strings come from the page itself
 document.querySelectorAll("[data-i18n]").forEach(el => { T.en[el.dataset.i18n] ??= el.innerHTML; });
@@ -413,27 +430,35 @@ const PUBS = [
   {g:"natl", a:"H. C. Lam and T. B. B. Duong", t:"Rate of convergence in central limit theorem for random walk in one dimension", j:"CTU Journal of Science", v:"vol. 49, pp. 73–78", y:2017},
 ];
 PUBS.forEach((p,i) => p.n = i + 1);
+PREPRINTS.forEach((p,i) => PUBS.push({ ...p, g: "pre", n: "P" + (i + 1) }));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let FILTER = "all";
 
-function render() {
-  const box = document.getElementById("publist");
-  const groups = FILTER === "all" ? ["intl","natl"] : [FILTER];
-  box.innerHTML = groups.map(g => {
-    const items = PUBS.filter(p => p.g === g).map(p => `
+function pubItem(p) {
+  const meta = p.g === "pre"
+    ? `${esc(p.tt || "")}${p.link && /^https?:\/\//.test(p.link) ? ` · <a href="${esc(p.link)}" target="_blank" rel="noopener">${t("view")}</a>` : ""}`
+    : `<em>${esc(p.j)}</em>, ${esc(p.v)}`;
+  return `
       <li class="pub" lang="en">
         <span class="num">[${p.n}]</span>
         <div>
           <p class="t">${esc(p.t)}</p>
           <p class="a">${esc(p.a).replace("H. C. Lam", "<b>H. C. Lam</b>")}</p>
-          <p class="j"><em>${esc(p.j)}</em>, ${esc(p.v)}</p>
+          ${meta ? `<p class="j">${meta}</p>` : ""}
         </div>
-        <span class="y">${p.y}</span>
-      </li>`).join("");
-    return `<div class="group-label">${t(g)}</div><ol class="pubs">${items}</ol>`;
+        <span class="y">${p.y || ""}</span>
+      </li>`;
+}
+function render() {
+  const box = document.getElementById("publist");
+  const groups = FILTER === "all" ? ["intl","natl","pre"] : [FILTER];
+  box.innerHTML = groups.map(g => {
+    const list = PUBS.filter(p => p.g === g);
+    if (!list.length) return FILTER === g ? `<p class="empty">${t("no_pre")}</p>` : "";
+    return `<div class="group-label">${t(g)}</div><ol class="pubs">${list.map(pubItem).join("")}</ol>`;
   }).join("");
   const shown = PUBS.filter(p => FILTER === "all" || p.g === FILTER).length;
-  document.getElementById("pubcount").textContent = `${shown} ${t("papers")}`;
+  document.getElementById("pubcount").textContent = `${shown} ${t(FILTER === "pre" ? "drafts" : "papers")}`;
 }
 document.querySelectorAll(".filters button").forEach(b => {
   const f = b.dataset.f;
